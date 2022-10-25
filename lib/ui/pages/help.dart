@@ -1,10 +1,10 @@
 import 'dart:math';
 import 'dart:ui';
 
-import 'package:elearning/ui/widgets/sectionHeader.dart';
+import 'package:learncoding/ui/widgets/sectionHeader.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:expand_widget/expand_widget.dart';
+// import 'package:expand_widget/expand_widget.dart';
 
 bool selected = false;
 
