@@ -1,4 +1,8 @@
+import 'package:learncoding/ui/pages/help.dart';
+import 'package:learncoding/ui/pages/navmenu/dashboard.dart';
 import 'package:learncoding/ui/pages/onboarding1.dart';
+import 'package:learncoding/ui/pages/profile.dart';
+import 'package:learncoding/ui/pages/setting.dart';
 import 'package:learncoding/ui/pages/undefinedScreen.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/cupertino.dart';
@@ -9,9 +13,9 @@ import 'package:learncoding/routes/router.dart' as router;
 import 'package:shared_preferences/shared_preferences.dart';
 
 late SharedPreferences prefs;
-void main() async {
+Future main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  // await Firebase.initializeApp();
+  await Firebase.initializeApp();
   SharedPreferences.getInstance().then((prefs) {
     SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp])
         .then((value) => runApp(
@@ -51,7 +55,8 @@ class _MyAppState extends State<MyApp> {
               )),
       // theme: Provider.of<ThemeModel>(context).currentTheme,
       debugShowCheckedModeBanner: false,
-      home: Onboarding(),
+      // home: Settings(),
+      home: Profile(),
     );
   }
 }
