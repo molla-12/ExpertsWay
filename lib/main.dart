@@ -15,7 +15,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 late SharedPreferences prefs;
 Future main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp();
+  // await Firebase.initializeApp();
   SharedPreferences.getInstance().then((prefs) {
     SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp])
         .then((value) => runApp(
