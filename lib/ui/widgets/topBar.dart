@@ -1,3 +1,6 @@
+import 'package:flutter/material.dart';
+import 'package:learncoding/models/course.dart';
+import 'package:learncoding/services/api_controller.dart';
 import 'package:learncoding/theme/box_icons_icons.dart';
 import 'package:learncoding/ui/widgets/card.dart';
 import 'package:flutter/cupertino.dart';
@@ -54,7 +57,7 @@ class _TopBarState extends State<TopBar> {
                   padding: const EdgeInsets.symmetric(horizontal: 15),
                   child: GestureDetector(
                     child: material.CircleAvatar(
-                      backgroundImage: AssetImage('assets/images/user.png'),
+                      backgroundImage: AssetImage('assets/images/user.jpg'),
                     ),
                     onTap: widget.onMenuTap,
                   ),
@@ -107,58 +110,65 @@ class _TopBarState extends State<TopBar> {
               ? Container(
                   width: MediaQuery.of(context).size.width,
                   height: MediaQuery.of(context).size.height * 0.165,
-                  child: ListView.builder(
-                    scrollDirection: Axis.horizontal,
-                    itemCount: 4,
-                    itemBuilder: (context, index) {
-                      return Padding(
-                        padding: const EdgeInsets.fromLTRB(15, 15, 10, 30),
-                        child: CardWidget(
-                          gradient: false,
-                          button: true,
-                          duration: 200,
-                          border: tab == index
-                              ? Border(
-                                  bottom: BorderSide(
-                                      color: tab == 0
-                                          ? Color(0xFF2828FF)
-                                          : tab == 1
-                                              ? Color(0xFFFF2E2E)
-                                              : tab == 2
-                                                  ? Color(0xFFFFD700)
-                                                  : Color(0xFF33FF33),
-                                      width: 5),
-                                )
-                              : null,
-                          child: Center(
-                            child: Column(
-                              mainAxisAlignment:
-                                  material.MainAxisAlignment.spaceEvenly,
-                              children: <Widget>[
-                                Icon(index == 0
-                                    ? BoxIcons.bx_shape_circle
-                                    : index == 1
-                                        ? BoxIcons.bx_shape_polygon
-                                        : index == 2
-                                            ? BoxIcons.bx_shape_square
-                                            : BoxIcons.bx_shape_triangle),
-                                Text(index == 0
-                                    ? "Maths"
-                                    : index == 1
-                                        ? "Physics"
-                                        : index == 2 ? "Chemistry" : "Biology")
-                              ],
-                            ),
-                          ),
-                          func: () {
-                            setState(() {
-                              tab = index;
-                            });
-                          },
-                        ),
-                      );
-                    },
-                  ),
+                  child: FutureBuilder<Course>(
+                      future: ApiProvider().retrieveCourses(),
+                      builder: (context, snapshot) {
+                        if (snapshot.hasData) {
+                          return ListView.builder(
+                              scrollDirection: Axis.horizontal,
+                              itemCount: snapshot.data!.course.length,
+                              itemBuilder: (context, index) {
+                                final courseData = snapshot.data!.course[index];
+                                return Padding(
+                                  padding:
+                                      const EdgeInsets.fromLTRB(15, 15, 10, 30),
+                                  child: CardWidget(
+                                    gradient: false,
+                                    button: true,
+                                    duration: 200,
+                                    border: tab == index
+                                        ? Border(
+                                            bottom: BorderSide(
+                                                color: tab == 0
+                                                    ? Color(0xFF2828FF)
+                                                    : tab == 1
+                                                        ? Color(0xFFFF2E2E)
+                                                        : tab == 2
+                                                            ? Color(0xFFFFD700)
+                                                            : Color(0xFF33FF33),
+                                                width: 5),
+                                          )
+                                        : null,
+                                    child: Center(
+                                      child: Column(
+                                        mainAxisAlignment: material
+                                            .MainAxisAlignment.spaceEvenly,
+                                        children: <Widget>[
+                                          Icon(courseData.name == "python"
+                                              ? BoxIcons.bx_shape_circle
+                                              : courseData.name == "JavaScript"
+                                                  ? BoxIcons.bx_shape_polygon
+                                                  : courseData.name == "Java"
+                                                      ? BoxIcons.bx_shape_square
+                                                      : BoxIcons
+                                                          .bx_shape_triangle),
+                                          Text(courseData.name)
+                                        ],
+                                      ),
+                                    ),
+                                    func: () {
+                                      setState(() {
+                                        tab = index;
+                                      });
+                                    },
+                                  ),
+                                );
+                              });
+                        } else {
+                          return const Center(
+                              child: CircularProgressIndicator());
+                        }
+                      }),
                 )
               : Container(),
         ],
