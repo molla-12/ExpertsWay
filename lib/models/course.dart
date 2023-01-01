@@ -32,6 +32,7 @@ class CourseElement {
     required this.description,
     required this.shortVideo,
     required this.color,
+    required this.icon,
     required this.lastUpdated,
     required this.sections,
   });
@@ -40,6 +41,7 @@ class CourseElement {
   String description;
   String shortVideo;
   String color;
+  String icon;
   DateTime lastUpdated;
   List<Section> sections;
 
@@ -49,6 +51,7 @@ class CourseElement {
         description: json["description"],
         shortVideo: json["short_video"],
         color: json["color"],
+        icon: json["icon"],
         lastUpdated: DateTime.parse(json["last_updated"]),
         sections: List<Section>.from(
             json["sections"].map((x) => Section.fromJson(x))),
@@ -60,6 +63,7 @@ class CourseElement {
         "description": description,
         "short_video": shortVideo,
         "color": color,
+        "icon": icon,
         "last_updated": lastUpdated.toIso8601String(),
         "sections": List<dynamic>.from(sections.map((x) => x.toJson())),
       };

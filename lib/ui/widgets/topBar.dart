@@ -129,13 +129,8 @@ class _TopBarState extends State<TopBar> {
                                     border: tab == index
                                         ? Border(
                                             bottom: BorderSide(
-                                                color: tab == 0
-                                                    ? Color(0xFF2828FF)
-                                                    : tab == 1
-                                                        ? Color(0xFFFF2E2E)
-                                                        : tab == 2
-                                                            ? Color(0xFFFFD700)
-                                                            : Color(0xFF33FF33),
+                                                color: colorConvert(
+                                                    courseData.color),
                                                 width: 5),
                                           )
                                         : null,
@@ -144,14 +139,11 @@ class _TopBarState extends State<TopBar> {
                                         mainAxisAlignment: material
                                             .MainAxisAlignment.spaceEvenly,
                                         children: <Widget>[
-                                          Icon(courseData.name == "python"
-                                              ? BoxIcons.bx_shape_circle
-                                              : courseData.name == "JavaScript"
-                                                  ? BoxIcons.bx_shape_polygon
-                                                  : courseData.name == "Java"
-                                                      ? BoxIcons.bx_shape_square
-                                                      : BoxIcons
-                                                          .bx_shape_triangle),
+                                          SizedBox(
+                                              width: 30,
+                                              height: 30,
+                                              child: Image.network(
+                                                  courseData.icon)),
                                           Text(courseData.name)
                                         ],
                                       ),
@@ -174,5 +166,16 @@ class _TopBarState extends State<TopBar> {
         ],
       ),
     );
+  }
+
+  Color colorConvert(String color) {
+    color = color.replaceAll("#", "");
+    if (color.length == 6) {
+      return Color(int.parse("0xFF" + color));
+    } else if (color.length == 8) {
+      return Color(int.parse("0x" + color));
+    } else {
+      return Color.fromARGB(0, 247, 86, 0);
+    }
   }
 }
