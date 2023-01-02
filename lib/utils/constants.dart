@@ -1,6 +1,7 @@
 class AppUrl {
-  static var baseUrl = '';
-  static var courseUrl =
-      'https://webhook.site/ad57ff7a-02c0-4650-822e-7ebd0f04561c';
-  // static var courseUrl = '$baseUrl/course';
+  static var username = 'esubalew11@gmail.com';
+  static var password = '105672864563817565';
+  static var loginWith = 'google';
+  static var baseUrl = 'https://dashencon.com/test/wp-json/ds_lc/v1';
+  static var courseUrl = '$baseUrl/courses';
 }

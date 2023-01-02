@@ -1,27 +1,27 @@
 import 'dart:convert';
 
-Course courseFromJson(String str) => Course.fromJson(json.decode(str));
+Course courseFromJson(dynamic str) => Course.fromJson(str);
 
 String courseToJson(Course data) => json.encode(data.toJson());
 
 class Course {
   Course({
     required this.code,
-    required this.course,
+    required this.courses,
   });
 
   int code;
-  List<CourseElement> course;
+  List<CourseElement> courses;
 
   factory Course.fromJson(Map<String, dynamic> json) => Course(
         code: json["code"],
-        course: List<CourseElement>.from(
-            json["course"].map((x) => CourseElement.fromJson(x))),
+        courses: List<CourseElement>.from(
+            json["courses"].map((x) => CourseElement.fromJson(x))),
       );
 
   Map<String, dynamic> toJson() => {
         "code": code,
-        "course": List<dynamic>.from(course.map((x) => x.toJson())),
+        "courses": List<dynamic>.from(courses.map((x) => x.toJson())),
       };
 }
 
@@ -30,42 +30,51 @@ class CourseElement {
     required this.slug,
     required this.name,
     required this.description,
+    required this.icon,
     required this.shortVideo,
     required this.color,
-    required this.icon,
     required this.lastUpdated,
     required this.sections,
+    this.prerequests,
+    required this.enabled,
   });
+
   String slug;
   String name;
   String description;
+  String icon;
   String shortVideo;
   String color;
-  String icon;
   DateTime lastUpdated;
   List<Section> sections;
+  String? prerequests;
+  String enabled;
 
   factory CourseElement.fromJson(Map<String, dynamic> json) => CourseElement(
         slug: json["slug"],
         name: json["name"],
         description: json["description"],
+        icon: json["icon"],
         shortVideo: json["short_video"],
         color: json["color"],
-        icon: json["icon"],
         lastUpdated: DateTime.parse(json["last_updated"]),
         sections: List<Section>.from(
             json["sections"].map((x) => Section.fromJson(x))),
+        prerequests: json["prerequests"],
+        enabled: json["enabled"],
       );
 
   Map<String, dynamic> toJson() => {
         "slug": slug,
         "name": name,
         "description": description,
+        "icon": icon,
         "short_video": shortVideo,
         "color": color,
-        "icon": icon,
         "last_updated": lastUpdated.toIso8601String(),
         "sections": List<dynamic>.from(sections.map((x) => x.toJson())),
+        "prerequests": prerequests,
+        "enabled": enabled,
       };
 }
 

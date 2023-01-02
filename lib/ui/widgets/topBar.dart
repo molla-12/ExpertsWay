@@ -116,9 +116,10 @@ class _TopBarState extends State<TopBar> {
                         if (snapshot.hasData) {
                           return ListView.builder(
                               scrollDirection: Axis.horizontal,
-                              itemCount: snapshot.data!.course.length,
+                              itemCount: snapshot.data!.courses.length,
                               itemBuilder: (context, index) {
-                                final courseData = snapshot.data!.course[index];
+                                final courseData =
+                                    snapshot.data!.courses[index];
                                 return Padding(
                                   padding:
                                       const EdgeInsets.fromLTRB(15, 15, 10, 30),
@@ -171,11 +172,11 @@ class _TopBarState extends State<TopBar> {
   Color colorConvert(String color) {
     color = color.replaceAll("#", "");
     if (color.length == 6) {
-      return Color(int.parse("0xFF" + color));
+      return Color(int.parse("0xFF$color"));
     } else if (color.length == 8) {
-      return Color(int.parse("0x" + color));
+      return Color(int.parse("0x$color"));
     } else {
-      return Color.fromARGB(0, 247, 86, 0);
+      return const Color.fromARGB(0, 247, 86, 0);
     }
   }
 }
