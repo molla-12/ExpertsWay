@@ -1,5 +1,6 @@
 import 'package:learncoding/theme/box_icons_icons.dart';
 import 'package:flutter/material.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 
 import '../help.dart';
 import '../profile.dart';
@@ -11,6 +12,7 @@ class Menu extends StatelessWidget {
   final int? selectedIndex;
   final Function onMenuItemClicked;
   final onMenuTap;
+  final GoogleSignInAccount user;
 
   const Menu(
       {Key? key,
@@ -18,7 +20,8 @@ class Menu extends StatelessWidget {
       this.slideAnimation,
       this.menuAnimation,
       this.selectedIndex,
-      required this.onMenuItemClicked})
+      required this.onMenuItemClicked,
+      required this.user})
       : super(key: key);
 
   @override
@@ -85,7 +88,7 @@ class Menu extends StatelessWidget {
                       children: <Widget>[
                         CircleAvatar(
                           radius: 30,
-                          backgroundImage: AssetImage('assets/images/user.png'),
+                           backgroundImage: NetworkImage(user.photoUrl!),
                         ),
                         Padding(
                           padding: const EdgeInsets.only(left: 16.0),
@@ -94,7 +97,7 @@ class Menu extends StatelessWidget {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: <Widget>[
                               Text(
-                                "Akshay Maurya",
+                                user.displayName!,
                                 maxLines: 1,
                                 overflow: TextOverflow.fade,
                                 style: TextStyle(
