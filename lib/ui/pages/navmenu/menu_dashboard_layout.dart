@@ -1,17 +1,13 @@
 import 'package:learncoding/theme/config.dart' as config;
-import 'package:google_sign_in/google_sign_in.dart';
 import 'package:learncoding/ui/pages/home.dart';
 import 'package:flutter/material.dart';
 import 'package:learncoding/ui/pages/navmenu/dashboard.dart';
-
 
 import 'menu.dart';
 
 final Color backgroundColor = Colors.lightBlue;
 
 class MenuDashboardLayout extends StatefulWidget {
-  final GoogleSignInAccount user;
-  MenuDashboardLayout({Key? key, required this.user}) : super(key: key);
   @override
   _MenuDashboardLayoutState createState() => _MenuDashboardLayoutState();
 }
@@ -83,17 +79,14 @@ class _MenuDashboardLayoutState extends State<MenuDashboardLayout>
               onMenuTap: onMenuTap,
               slideAnimation: _slideAnimation,
               menuAnimation: _menuScaleAnimation,
-              onMenuItemClicked: onMenuItemClicked,
-              user: widget.user,
-              ),
+              onMenuItemClicked: onMenuItemClicked),
           Dashboard(
             duration: duration,
             onMenuTap: onMenuTap,
             scaleAnimation: _scaleAnimation,
             isCollapsed: isCollapsed,
             screenWidth: screenWidth,
-            child: Home(onMenuTap: onMenuTap,
-            ),
+            child: Home(onMenuTap: onMenuTap),
           ),
         ],
       ),
