@@ -85,7 +85,7 @@ class Menu extends StatelessWidget {
                       children: <Widget>[
                         CircleAvatar(
                           radius: 30,
-                          backgroundImage: AssetImage('assets/images/user.png'),
+                          backgroundImage: AssetImage('assets/images/user.jpg'),
                         ),
                         Padding(
                           padding: const EdgeInsets.only(left: 16.0),
