@@ -113,9 +113,9 @@ class _OnboardingState extends State<Onboarding> {
   }
 
   Future signin() async {
-    final user = await GoogleSignInApi.login();
-    String? name = user!.displayName;
-    String? image = user.photoUrl;
+    // final user = await GoogleSignInApi.login();
+    String? name = "testDisplayName";//user!.displayName;
+    String? image = "https://www.gravatar.com/avatar/205e460b479e2e5b48aec07710c08d50";//user.photoUrl;
     SharedPreferences pref = await SharedPreferences.getInstance();
     pref.setString('name', name!);
     pref.setString('image', image!);
