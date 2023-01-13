@@ -6,6 +6,10 @@ import 'package:learncoding/ui/widgets/card.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart' as material;
 import 'package:flutter/services.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
+String? name;
+String? image;
 
 class TopBar extends StatefulWidget {
   const TopBar({
@@ -19,12 +23,27 @@ class TopBar extends StatefulWidget {
   final bool expanded;
   final onMenuTap;
 
+  
+
   @override
   _TopBarState createState() => _TopBarState();
 }
 
 class _TopBarState extends State<TopBar> {
   int tab = 0;
+  @override
+  void initState() {
+    super.initState();
+    getValue();
+  }
+
+  getValue() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    //Return double
+    name = prefs.getString('name');
+    image = prefs.getString('image');
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -45,7 +64,7 @@ class _TopBarState extends State<TopBar> {
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 15),
                   child: Text(
-                    "Hi, Akshay.",
+                    "Hi," + name!,
                     style: TextStyle(
                         color: Color(0xFF343434),
                         fontSize: 24,
@@ -57,7 +76,7 @@ class _TopBarState extends State<TopBar> {
                   padding: const EdgeInsets.symmetric(horizontal: 15),
                   child: GestureDetector(
                     child: material.CircleAvatar(
-                      backgroundImage: AssetImage('assets/images/user.jpg'),
+                      backgroundImage: NetworkImage(image!),
                     ),
                     onTap: widget.onMenuTap,
                   ),

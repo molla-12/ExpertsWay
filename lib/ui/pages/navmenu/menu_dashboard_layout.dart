@@ -10,8 +10,8 @@ import 'menu.dart';
 final Color backgroundColor = Colors.lightBlue;
 
 class MenuDashboardLayout extends StatefulWidget {
-  final GoogleSignInAccount user;
-  MenuDashboardLayout({Key? key, required this.user}) : super(key: key);
+
+  MenuDashboardLayout({Key? key}) : super(key: key);
   @override
   _MenuDashboardLayoutState createState() => _MenuDashboardLayoutState();
 }
@@ -84,7 +84,7 @@ class _MenuDashboardLayoutState extends State<MenuDashboardLayout>
               slideAnimation: _slideAnimation,
               menuAnimation: _menuScaleAnimation,
               onMenuItemClicked: onMenuItemClicked,
-              user: widget.user,
+              
               ),
           Dashboard(
             duration: duration,

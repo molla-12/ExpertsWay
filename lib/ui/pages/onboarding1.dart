@@ -3,6 +3,7 @@ import 'package:learncoding/ui/pages/navmenu/menu_dashboard_layout.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:learncoding/api/google_signin_api.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class Onboarding extends StatefulWidget {
   @override
@@ -11,12 +12,14 @@ class Onboarding extends StatefulWidget {
 
 class _OnboardingState extends State<Onboarding> {
   final PageController controller = PageController(initialPage: 0);
+
   int? pageNumber;
   List widgets = [];
   @override
   void initState() {
     pageNumber = 0;
     super.initState();
+    // signin();
   }
 
   void createWidgets() {
@@ -103,9 +106,7 @@ class _OnboardingState extends State<Onboarding> {
                   ),
                 ],
               ),
-
-                onPressed: signin
-              )
+              onPressed: signin)
         ],
       ),
     ]);
@@ -113,12 +114,15 @@ class _OnboardingState extends State<Onboarding> {
 
   Future signin() async {
     final user = await GoogleSignInApi.login();
-   
-      Navigator.of(context).pushReplacement(MaterialPageRoute(
-        builder: (context) => (MenuDashboardLayout(user:user!))));
-    
-  }
+    String? name = user!.displayName;
+    String? image = user.photoUrl;
+    SharedPreferences pref = await SharedPreferences.getInstance();
+    pref.setString('name', name!);
+    pref.setString('image', image!);
 
+    Navigator.of(context).pushReplacement(MaterialPageRoute(
+        builder: (context) => (MenuDashboardLayout())));
+  }
 
   @override
   Widget build(BuildContext context) {
