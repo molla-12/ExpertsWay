@@ -1,3 +1,4 @@
+import 'package:learncoding/api/shared_preference/shared_preference.dart';
 import 'package:learncoding/theme/box_icons_icons.dart';
 import 'package:learncoding/ui/pages/navmenu/menu_dashboard_layout.dart';
 import 'package:flutter/cupertino.dart';
@@ -116,12 +117,12 @@ class _OnboardingState extends State<Onboarding> {
     final user = await GoogleSignInApi.login();
     String? name = user!.displayName;
     String? image = user.photoUrl;
-    SharedPreferences pref = await SharedPreferences.getInstance();
-    pref.setString('name', name!);
-    pref.setString('image', image!);
+    
+    // SharedPreferences pref = await SharedPreferences.getInstance();
+    UserPreferences.setuser(image!, name!);
 
-    Navigator.of(context).pushReplacement(MaterialPageRoute(
-        builder: (context) => (MenuDashboardLayout())));
+    Navigator.of(context).pushReplacement(
+        MaterialPageRoute(builder: (context) => (MenuDashboardLayout())));
   }
 
   @override

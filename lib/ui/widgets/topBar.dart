@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:learncoding/api/shared_preference/user.dart';
 import 'package:learncoding/models/course.dart';
 import 'package:learncoding/services/api_controller.dart';
 import 'package:learncoding/theme/box_icons_icons.dart';
@@ -7,6 +8,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart' as material;
 import 'package:flutter/services.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
+import '../../api/shared_preference/shared_preference.dart';
 
 String? name;
 String? image;
@@ -22,8 +25,6 @@ class TopBar extends StatefulWidget {
   final TextEditingController controller;
   final bool expanded;
   final onMenuTap;
-
-  
 
   @override
   _TopBarState createState() => _TopBarState();
