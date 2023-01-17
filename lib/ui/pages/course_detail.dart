@@ -1,5 +1,6 @@
 import 'package:learncoding/models/course.dart';
-import 'package:learncoding/models/lesson.dart';
+import 'package:learncoding/models/lesson.dart' as lesson;
+import 'package:learncoding/ui/pages/lesson.dart';
 import 'package:learncoding/services/api_controller.dart';
 import 'package:learncoding/theme/box_icons_icons.dart';
 import 'package:learncoding/ui/widgets/card.dart';
@@ -124,7 +125,7 @@ class _CoursePagePageState extends State<CourseDetailPage> {
   }
 
   Widget buildlesson() {
-    return FutureBuilder<Lesson>(
+    return FutureBuilder<lesson.Lesson>(
         future: ApiProvider().retrieveLessons(widget.courseData.slug),
         builder: (context, snapshot) {
           if (snapshot.hasData) {
@@ -201,13 +202,13 @@ class _CoursePagePageState extends State<CourseDetailPage> {
                 fontFamily: 'Red Hat Display',
                 fontSize: 18.0,
                 fontWeight: FontWeight.w500,
-                color: Color.fromARGB(255, 121, 121, 123), //cahnge?
+                color: Color.fromARGB(255, 121, 121, 123),
               ),
             ),
           ),
           tilePadding: const EdgeInsets.fromLTRB(15, 1, 10, 1),
           iconColor: const Color.fromARGB(255, 172, 172, 172),
-          collapsedIconColor: const Color.fromARGB(255, 172, 172, 172), //c
+          collapsedIconColor: const Color.fromARGB(255, 172, 172, 172),
           children: <Widget>[
             const Divider(
               color: Color.fromARGB(255, 215, 214, 214),
@@ -222,7 +223,7 @@ class _CoursePagePageState extends State<CourseDetailPage> {
                     ? 0
                     : lessonList(lessonData, section).length,
                 itemBuilder: (context, index) {
-                  List a = lessonList(lessonData, section);
+                  List lessonTitle = lessonList(lessonData, section);
                   return Container(
                     padding: const EdgeInsets.fromLTRB(17, 0, 15, 0),
                     child: Column(
@@ -235,21 +236,34 @@ class _CoursePagePageState extends State<CourseDetailPage> {
                             const SizedBox(
                               width: 17,
                             ),
-                            Text(
-                              a[index],
-                              style: TextStyle(
-                                color: index == 2 ? Colors.blue : Colors.grey,
-                                fontFamily: 'Red Hat Display',
-                                fontSize: 17.0,
-                                fontWeight: FontWeight.w500,
+                            GestureDetector(
+                              child: Text(
+                                lessonTitle[index],
+                                style: TextStyle(
+                                  color: index == 2 ? Colors.blue : Colors.grey,
+                                  fontFamily: 'Red Hat Display',
+                                  fontSize: 17.0,
+                                  fontWeight: FontWeight.w500,
+                                ),
                               ),
+                              onTap: () {
+                                Navigator.push(
+                                  context,
+                                  CupertinoPageRoute(
+                                    builder: (context) => LessonPage(
+                                        lessonData: lessonData,
+                                        section: section.toString(),
+                                        lesson: lessonTitle[index].toString()),
+                                  ),
+                                );
+                              },
                             )
                           ],
                         ),
                         Container(
                             padding: const EdgeInsets.only(left: 12),
                             alignment: Alignment.topLeft,
-                            child: index < a.length - 1
+                            child: index < lessonTitle.length - 1
                                 ? Container(
                                     height: 30,
                                     width: 1,
@@ -414,7 +428,6 @@ class _CoursePagePageState extends State<CourseDetailPage> {
                                   size: 40),
                               onPressed: () {
                                 setState(() {
-                                  // print(_isPlayerReady);
                                   _controller.value.isPlaying
                                       ? _controller.pause()
                                       : _controller.play();
