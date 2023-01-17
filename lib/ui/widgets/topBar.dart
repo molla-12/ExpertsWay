@@ -3,6 +3,7 @@ import 'package:learncoding/api/shared_preference/user.dart';
 import 'package:learncoding/models/course.dart';
 import 'package:learncoding/services/api_controller.dart';
 import 'package:learncoding/theme/box_icons_icons.dart';
+import 'package:learncoding/ui/pages/course_detail.dart';
 import 'package:learncoding/ui/widgets/card.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart' as material;
@@ -172,6 +173,15 @@ class _TopBarState extends State<TopBar> {
                                     func: () {
                                       setState(() {
                                         tab = index;
+                                        Navigator.push(
+                                          context,
+                                          CupertinoPageRoute(
+                                            builder: (context) =>
+                                                CourseDetailPage(
+                                              courseData: courseData,
+                                            ),
+                                          ),
+                                        );
                                       });
                                     },
                                   ),
