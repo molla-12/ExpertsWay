@@ -21,42 +21,26 @@ class LessonPage extends StatefulWidget {
 }
 
 class _LessonState extends State<LessonPage> {
-  String? lessonContent(lessonData, lesson, section) {
+  lessonContent(lessonData, lesson, section) {
     for (var element in lessonData) {
       if (element.title == lesson && element.section == section) {
-        final String lessonHtml = element.content.join();
+        final lessonHtml = element.content;
+        // final String lessonHtml = element.content.join();
         return lessonHtml;
       }
     }
     return null;
   }
 
-  int index(lessonData, lesson, section) {
-    int lessonIndex = 0;
-    for (var element in lessonData) {
-      lessonIndex++;
-      if (element.title == lesson && element.section == section) {
-        return lessonIndex;
-      }
-    }
-    return lessonIndex;
-  }
-
-  int totalLesson(lessonData) {
-    int lessonCount = 0;
-    for (var element in lessonData) {
-      lessonCount++;
-    }
-    return lessonCount;
-  }
+  int index = 0;
+  bool finishLesson = false;
 
   @override
   Widget build(BuildContext context) {
-    String? lessonHtml =
+    final lessonHtml =
         lessonContent(widget.lessonData, widget.lesson, widget.section);
-    int lessonIndex = index(widget.lessonData, widget.lesson, widget.section);
-    int totalLessonCount = totalLesson(widget.lessonData);
-    double progress = lessonIndex / totalLessonCount;
+    String lesson = lessonHtml[index];
+    double progress = index / lessonHtml.length;
     int remainingHearts = 3;
     return CupertinoPageScaffold(
       backgroundColor: config.Colors().secondColor(1),
@@ -109,7 +93,7 @@ class _LessonState extends State<LessonPage> {
                 borderRadius: BorderRadius.circular(10),
                 child: LinearProgressIndicator(
                   backgroundColor: Colors.green,
-                  value: progress,
+                  value: finishLesson ? 1 : progress,
                   valueColor: const AlwaysStoppedAnimation<Color>(
                       Color.fromARGB(255, 4, 67, 33)),
                   minHeight: 18,
@@ -117,8 +101,21 @@ class _LessonState extends State<LessonPage> {
               ),
             ),
             Html(
-              data: lessonHtml,
+              data: lesson,
             ),
+            CupertinoButton(
+                child: const Text("Next lesson"),
+                onPressed: () {
+                  print(lessonHtml.length);
+                  print(index);
+                  index < lessonHtml.length - 1
+                      ? setState(() {
+                          index++;
+                        })
+                      : setState(() {
+                          finishLesson = true;
+                        });
+                })
           ],
         ),
       ),
