@@ -109,7 +109,6 @@ class _MenuState extends State<Menu> {
                       children: <Widget>[
                         CircleAvatar(
                           radius: 30,
-
                            backgroundImage: NetworkImage(image!),
                         ),
                         Padding(
