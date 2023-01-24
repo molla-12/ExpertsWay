@@ -1,17 +1,24 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:learncoding/api/shared_preference/user.dart';
 import 'package:learncoding/models/course.dart';
 import 'package:learncoding/services/api_controller.dart';
 import 'package:learncoding/theme/box_icons_icons.dart';
+import 'package:learncoding/ui/pages/course_detail.dart';
 import 'package:learncoding/ui/widgets/card.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart' as material;
 import 'package:flutter/services.dart';
+
 import 'package:learncoding/ui/widgets/course_card.dart';
 import 'package:learncoding/utils/color.dart';
 import 'package:learncoding/utils/constants.dart';
 import '../../db/course_database.dart';
+import '../../api/shared_preference/shared_preference.dart';
+
+String? name;
+String? image;
 
 class TopBar extends StatefulWidget {
   const TopBar({
@@ -64,6 +71,19 @@ class _TopBarState extends State<TopBar> {
   }
 
   @override
+  void initState() {
+    super.initState();
+    getValue();
+  }
+
+  getValue() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    //Return double
+    name = prefs.getString('name');
+    image = prefs.getString('image');
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Container(
       color: CupertinoColors.white,
@@ -84,7 +104,7 @@ class _TopBarState extends State<TopBar> {
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 15),
                   child: Text(
-                    "Hi, Akshay.",
+                    "Hi," + name!,
                     style: TextStyle(
                         color: Color(0xFF343434),
                         fontSize: 24,
@@ -96,7 +116,7 @@ class _TopBarState extends State<TopBar> {
                   padding: const EdgeInsets.symmetric(horizontal: 15),
                   child: GestureDetector(
                     child: material.CircleAvatar(
-                      backgroundImage: AssetImage('assets/images/user.jpg'),
+                      backgroundImage: NetworkImage(image!),
                     ),
                     onTap: widget.onMenuTap,
                   ),
@@ -149,17 +169,61 @@ class _TopBarState extends State<TopBar> {
               ? Container(
                   width: MediaQuery.of(context).size.width,
                   height: MediaQuery.of(context).size.height * 0.165,
-                  child: course.isEmpty
-                      ? FutureBuilder<Course>(
-                          future: ApiProvider().retrieveCourses(),
-                          builder: (context, snapshot) {
-                            List<Section> sec = [];
-                            if (snapshot.connectionState ==
-                                ConnectionState.waiting) {
-                              {
-                                return Center(
-                                  child: CircularProgressIndicator(
-                                    color: maincolor,
+
+                  child: FutureBuilder<Course>(
+                      future: ApiProvider().retrieveCourses(),
+                      builder: (context, snapshot) {
+                        if (snapshot.hasData) {
+                          return ListView.builder(
+                              scrollDirection: Axis.horizontal,
+                              itemCount: snapshot.data!.courses.length,
+                              itemBuilder: (context, index) {
+                                final courseData =
+                                    snapshot.data!.courses[index];
+                                return Padding(
+                                  padding:
+                                      const EdgeInsets.fromLTRB(15, 15, 10, 30),
+                                  child: CardWidget(
+                                    gradient: false,
+                                    button: true,
+                                    duration: 200,
+                                    border: tab == index
+                                        ? Border(
+                                            bottom: BorderSide(
+                                                color: colorConvert(
+                                                    courseData.color),
+                                                width: 5),
+                                          )
+                                        : null,
+                                    child: Center(
+                                      child: Column(
+                                        mainAxisAlignment: material
+                                            .MainAxisAlignment.spaceEvenly,
+                                        children: <Widget>[
+                                          SizedBox(
+                                              width: 30,
+                                              height: 30,
+                                              child: Image.network(
+                                                  courseData.icon)),
+                                          Text(courseData.name)
+                                        ],
+                                      ),
+                                    ),
+                                    func: () {
+                                      setState(() {
+                                        tab = index;
+                                        Navigator.push(
+                                          context,
+                                          CupertinoPageRoute(
+                                            builder: (context) =>
+                                                CourseDetailPage(
+                                              courseData: courseData,
+                                            ),
+                                          ),
+                                        );
+                                      });
+                                    },
+
                                   ),
                                 );
                               }
