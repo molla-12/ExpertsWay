@@ -19,7 +19,7 @@ class ApiProvider {
     );
     if (response.statusCode == 200) {
       final responseBody = response.data;
-      final Course course = Course.fromJson(responseBody);
+      final Course course = courseFromJson(responseBody);
       return course;
     } else {
       throw Exception('Failed to load course');
