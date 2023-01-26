@@ -1,9 +1,13 @@
+import 'dart:math';
+import 'package:another_flushbar/flushbar.dart';
 import 'package:learncoding/models/lesson.dart';
 import 'package:learncoding/theme/box_icons_icons.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:learncoding/theme/config.dart' as config;
 import 'package:flutter/material.dart';
 import 'package:flutter_html/flutter_html.dart';
+import 'package:learncoding/utils/color.dart';
+import 'package:learncoding/utils/lessonFinishMessage.dart';
 
 class LessonPage extends StatefulWidget {
   final List<LessonElement?> lessonData;
@@ -21,11 +25,51 @@ class LessonPage extends StatefulWidget {
 }
 
 class _LessonState extends State<LessonPage> {
+  lessonFinished() {
+    Random random = Random();
+    int randomNo1 = random.nextInt(greeting.length);
+    int randomNo2 = random.nextInt(completed.length);
+    int randomNo3 = random.nextInt(encouragement.length);
+
+    String userName = "John", message, greet;
+
+    if (greeting[randomNo1].startsWith("Congratulations") ||
+        greeting[randomNo2].startsWith("You did it") ||
+        greeting[randomNo3].startsWith("Wow")) {
+      greet = "${greeting[randomNo1]} $userName!";
+    } else {
+      greet = "${greeting[randomNo1]} $userName";
+    }
+
+    if (encouragement[randomNo3].endsWith(".") ||
+        encouragement[randomNo3].endsWith("!")) {
+      message =
+          "${completed[randomNo2]}${widget.lesson} in ${widget.section}. ${encouragement[randomNo3]}";
+    } else {
+      message =
+          "${completed[randomNo2]}${widget.lesson} in ${widget.section}. ${encouragement[randomNo3]} $nextLessonTitle in the next chapter.";
+    }
+    List<String> encouragementMessage = [greet, message];
+    return encouragementMessage;
+  }
+
+  nextLesson(lessonData, lesson, section) {
+    bool lessonFound = false;
+    for (var element in lessonData) {
+      if (lessonFound) {
+        nextLessonTitle = element.title;
+        break;
+      }
+      if (element.title == lesson && element.section == section) {
+        lessonFound = true;
+      }
+    }
+  }
+
   lessonContent(lessonData, lesson, section) {
     for (var element in lessonData) {
       if (element.title == lesson && element.section == section) {
         final lessonHtml = element.content;
-        // final String lessonHtml = element.content.join();
         return lessonHtml;
       }
     }
@@ -34,11 +78,14 @@ class _LessonState extends State<LessonPage> {
 
   int index = 0;
   bool finishLesson = false;
+  String nextLessonTitle = "";
+  bool showFlushbar = true;
 
   @override
   Widget build(BuildContext context) {
     final lessonHtml =
         lessonContent(widget.lessonData, widget.lesson, widget.section);
+    nextLesson(widget.lessonData, widget.lesson, widget.section);
     String lesson = lessonHtml[index];
     double progress = index / lessonHtml.length;
     int remainingHearts = 3;
@@ -106,14 +153,26 @@ class _LessonState extends State<LessonPage> {
             CupertinoButton(
                 child: const Text("Next lesson"),
                 onPressed: () {
-                  print(lessonHtml.length);
-                  print(index);
+                  showFlushbar && index == lessonHtml.length - 1
+                      ? Flushbar(
+                          flushbarPosition: FlushbarPosition.BOTTOM,
+                          margin: const EdgeInsets.fromLTRB(10, 20, 10, 5),
+                          titleSize: 20,
+                          messageSize: 17,
+                          backgroundColor: maincolor,
+                          borderRadius: BorderRadius.circular(8),
+                          title: lessonFinished()[0].toString(),
+                          message: lessonFinished()[1].toString(),
+                          duration: const Duration(seconds: 5),
+                        ).show(context)
+                      : Container();
                   index < lessonHtml.length - 1
                       ? setState(() {
                           index++;
                         })
                       : setState(() {
                           finishLesson = true;
+                          showFlushbar = false;
                         });
                 })
           ],
