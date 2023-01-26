@@ -1,6 +1,8 @@
 import 'dart:math';
 import 'package:another_flushbar/flushbar.dart';
+import 'package:learncoding/api/shared_preference/shared_preference.dart';
 import 'package:learncoding/models/lesson.dart';
+import 'package:learncoding/models/user.dart';
 import 'package:learncoding/theme/box_icons_icons.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:learncoding/theme/config.dart' as config;
@@ -25,20 +27,31 @@ class LessonPage extends StatefulWidget {
 }
 
 class _LessonState extends State<LessonPage> {
+  @override
+  void initState() {
+    super.initState();
+    init();
+  }
+
+  Future init() async {
+    User user = await UserPreferences.getuser('image', 'name');
+    String? name = user.name;
+    this.name = name;
+  }
+
   lessonFinished() {
     Random random = Random();
     int randomNo1 = random.nextInt(greeting.length);
     int randomNo2 = random.nextInt(completed.length);
     int randomNo3 = random.nextInt(encouragement.length);
 
-    String userName = "John", message, greet;
-
+    String message, greet;
     if (greeting[randomNo1].startsWith("Congratulations") ||
         greeting[randomNo2].startsWith("You did it") ||
         greeting[randomNo3].startsWith("Wow")) {
-      greet = "${greeting[randomNo1]} $userName!";
+      greet = "${greeting[randomNo1]} $name!";
     } else {
-      greet = "${greeting[randomNo1]} $userName";
+      greet = "${greeting[randomNo1]} $name";
     }
 
     if (encouragement[randomNo3].endsWith(".") ||
@@ -80,6 +93,7 @@ class _LessonState extends State<LessonPage> {
   bool finishLesson = false;
   String nextLessonTitle = "";
   bool showFlushbar = true;
+  String? name;
 
   @override
   Widget build(BuildContext context) {
