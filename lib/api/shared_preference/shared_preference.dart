@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:learncoding/models/user.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -14,8 +15,7 @@ class UserPreferences {
   static Future<User> getuser(String image, String name) async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     String? name = prefs.getString("name");
-    String? image = prefs.getString("image");
-    print(name);
+    // Image? image = prefs.getString("image");
     return User(name: name, image: image);
   }
 }
