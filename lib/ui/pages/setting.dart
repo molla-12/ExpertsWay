@@ -9,7 +9,7 @@ import 'package:learncoding/api/shared_preference/shared_preference.dart';
 import 'package:learncoding/main.dart';
 import 'package:learncoding/ui/pages/onboarding1.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:learncoding/api/Google_signin_api.dart';
+import 'package:learncoding/api/google_signin_api.dart';
 import 'package:learncoding/ui/widgets/header.dart';
 import 'package:learncoding/utils/color.dart';
 import 'package:shared_preferences/shared_preferences.dart';
