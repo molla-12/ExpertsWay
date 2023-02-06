@@ -12,14 +12,20 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:learncoding/global/globals.dart' as globals;
 import 'package:learncoding/routes/router.dart' as router;
+import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
+import 'api/Provider/theme_provider.dart';
 
 String? name;
 String? image;
-late SharedPreferences prefs;
+var isDark;
+// late SharedPreferences prefs;
 
 Future main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  SharedPreferences preferences = await SharedPreferences.getInstance();
+   isDark = preferences.getBool('is_dark') ?? false;
 
   // await Firebase.initializeApp();
   SharedPreferences.getInstance().then((prefs) {
@@ -33,6 +39,7 @@ Future main() async {
 }
 
 class MyApp extends StatefulWidget {
+  const MyApp();
   @override
   _MyAppState createState() => _MyAppState();
 }
@@ -40,10 +47,10 @@ class MyApp extends StatefulWidget {
 class _MyAppState extends State<MyApp> {
   void getLoginStatus() async {
     WidgetsFlutterBinding.ensureInitialized();
-
-    globals.gAuth.googleSignIn.isSignedIn().then((value) {
-      prefs.setBool("isLoggedin", value);
-    });
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    // globals.gAuth.googleSignIn.isSignedIn().then((value) {
+    //   prefs.setBool("isLoggedin", value);
+    // });
   }
 
   getValue() async {
@@ -55,25 +62,29 @@ class _MyAppState extends State<MyApp> {
 
   @override
   void initState() {
-    getLoginStatus();
-    MenuDashboardLayout();
+    getValue();
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    return CupertinoApp(
-      onGenerateRoute: router.generateRoute,
-      onUnknownRoute: (settings) => CupertinoPageRoute(
-          builder: (context) => UndefinedScreen(
-                name: settings.name,
-              )),
-      // theme: Provider.of<ThemeModel>(context).currentTheme,
-      debugShowCheckedModeBanner: false,
-      // home: Settings(),
-      // home: Profile(),
-      home: name == null ? Onboarding():MenuDashboardLayout(),
-    );
+    return ChangeNotifierProvider(
+        create: ((context) => ThemeModel(isDark)),
+        builder: (context, child) {
+          return MaterialApp(
+            onGenerateRoute: router.generateRoute,
+            onUnknownRoute: (settings) => CupertinoPageRoute(
+                builder: (context) => UndefinedScreen(
+                      name: settings.name,
+                    )),
+            theme: Provider.of<ThemeModel>(context).currentTheme,
+            debugShowCheckedModeBanner: false,
+            
+            // home: Settings(),
+            // home: Profile(),
+            home: name == null ? Onboarding() : MenuDashboardLayout(),
+          );
+        });
   }
 }
 

@@ -3,7 +3,6 @@ import 'package:learncoding/api/shared_preference/user.dart';
 import 'package:learncoding/models/course.dart';
 import 'package:learncoding/services/api_controller.dart';
 import 'package:learncoding/theme/box_icons_icons.dart';
-import 'package:learncoding/ui/pages/course_detail.dart';
 import 'package:learncoding/ui/widgets/card.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart' as material;
@@ -15,6 +14,7 @@ import '../../api/shared_preference/shared_preference.dart';
 String? name;
 String? image;
 
+
 class TopBar extends StatefulWidget {
   const TopBar({
     Key? key,
@@ -25,6 +25,7 @@ class TopBar extends StatefulWidget {
 
   final TextEditingController controller;
   final bool expanded;
+
   final onMenuTap;
 
   @override
@@ -33,11 +34,15 @@ class TopBar extends StatefulWidget {
 
 class _TopBarState extends State<TopBar> {
   int tab = 0;
+  
+
   @override
   void initState() {
     super.initState();
     getValue();
   }
+
+  
 
   getValue() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -46,6 +51,12 @@ class _TopBarState extends State<TopBar> {
     image = prefs.getString('image');
   }
 
+  
+  
+  
+
+
+  
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -173,15 +184,6 @@ class _TopBarState extends State<TopBar> {
                                     func: () {
                                       setState(() {
                                         tab = index;
-                                        Navigator.push(
-                                          context,
-                                          CupertinoPageRoute(
-                                            builder: (context) =>
-                                                CourseDetailPage(
-                                              courseData: courseData,
-                                            ),
-                                          ),
-                                        );
                                       });
                                     },
                                   ),
