@@ -20,7 +20,7 @@ import 'api/Provider/theme_provider.dart';
 String? name;
 String? image;
 var isDark;
-// late SharedPreferences prefs;
+late SharedPreferences prefs;
 
 Future main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -48,9 +48,9 @@ class _MyAppState extends State<MyApp> {
   void getLoginStatus() async {
     WidgetsFlutterBinding.ensureInitialized();
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    // globals.gAuth.googleSignIn.isSignedIn().then((value) {
-    //   prefs.setBool("isLoggedin", value);
-    // });
+    globals.gAuth.googleSignIn.isSignedIn().then((value) {
+      prefs.setBool("isLoggedin", value);
+    });
   }
 
   getValue() async {
