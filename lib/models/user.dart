@@ -1,8 +1,8 @@
-class AppUser {
+class User {
   String? name;
   String? image;
 
-  AppUser({
+  User({
     this.image,
     this.name,
   });

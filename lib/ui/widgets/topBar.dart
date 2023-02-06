@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:learncoding/api/shared_preference/user.dart';
+import 'package:learncoding/models/user.dart';
 import 'package:learncoding/models/course.dart';
 import 'package:learncoding/services/api_controller.dart';
 import 'package:learncoding/theme/box_icons_icons.dart';
