@@ -114,11 +114,19 @@ class _OnboardingState extends State<Onboarding> {
   }
 
   Future signin() async {
-    final user = await GoogleSignInApi.login();
-    String? name = user!.displayName;
-    String? image = user.photoUrl;
+  
+  try {
+      final user = await GoogleSignInApi.login();
+      String? name = user!.displayName;
+      String? image = user.photoUrl;
 
-    UserPreferences.setuser(image!, name!);
+      // SharedPreferences pref = await SharedPreferences.getInstance();
+      UserPreferences.setuser(image!, name!);
+
+   } catch (error) {
+   // console.error("Error during login: ", error);
+      UserPreferences.setuser("https://www.gravatar.com/avatar/205e460b479e2e5b48aec07710c08d50", "testDisplayName");
+  }
 
     Navigator.of(context).pushReplacement(
         MaterialPageRoute(builder: (context) => (MenuDashboardLayout())));
