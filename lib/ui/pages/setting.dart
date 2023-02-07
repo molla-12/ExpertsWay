@@ -12,10 +12,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:learncoding/api/google_signin_api.dart';
 import 'package:learncoding/ui/widgets/header.dart';
 import 'package:learncoding/utils/color.dart';
-import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
-import '../../api/Provider/theme_provider.dart';
 
 String? title;
 
@@ -44,7 +41,7 @@ class _SettingsState extends State<Settings> {
         color: Colors.transparent,
         child: InkWell(
           onTap: () async {
-            if (title == 'logout') {
+            if (title == 'Logout') {
               SharedPreferences pre = await SharedPreferences.getInstance();
               await pre.remove('name');
               await pre.remove('image');
@@ -52,15 +49,10 @@ class _SettingsState extends State<Settings> {
               GoogleSignInApi.logout();
 
               Navigator.of(context).pushReplacement(MaterialPageRoute(
-                  builder: (context) => Onboarding()));
+                  builder: (context) => RestartWidget(child: (MyApp()))));
             }
 
-            if (title == 'Dark mode') {
-              final settings = Provider.of<ThemeModel>(context,listen: false);
-              settings.Theme();
-            }
-
-            
+            ;
           },
           highlightColor: Color.fromARGB(132, 135, 208, 245),
           splashColor: Color.fromARGB(61, 231, 231, 231),
@@ -113,7 +105,7 @@ class _SettingsState extends State<Settings> {
                 children: [
                   _container(
                     Icons.cleaning_services,
-                    'Personalized notifications',
+                    'Clear data',
                     Icons.arrow_forward_ios,
                   ),
                   SizedBox(
@@ -121,7 +113,7 @@ class _SettingsState extends State<Settings> {
                   ),
                   _container(
                     FontAwesomeIcons.ad,
-                    'clean data',
+                    'ad',
                     Icons.arrow_forward_ios,
                   ),
                   SizedBox(
@@ -129,7 +121,7 @@ class _SettingsState extends State<Settings> {
                   ),
                   _container(
                     FontAwesomeIcons.coins,
-                    'logout',
+                    'How do you earn coin',
                     Icons.arrow_forward_ios,
                   ),
                   SizedBox(
@@ -137,23 +129,7 @@ class _SettingsState extends State<Settings> {
                   ),
                   _container(
                     Icons.logout,
-                    'Dark mode',
-                    Icons.arrow_forward_ios,
-                  ),
-                  SizedBox(
-                    height: 20,
-                  ),
-                  _container(
-                    Icons.logout,
-                    'silent mode notifications',
-                    Icons.arrow_forward_ios,
-                  ),
-                  SizedBox(
-                    height: 20,
-                  ),
-                  _container(
-                    Icons.logout,
-                    'Auto clean',
+                    'Logout',
                     Icons.arrow_forward_ios,
                   ),
                 ],
