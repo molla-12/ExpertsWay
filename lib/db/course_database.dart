@@ -1,8 +1,14 @@
+import 'dart:io';
+
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+import 'package:learncoding/utils/color.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
 import 'dart:convert';
 import '../models/course.dart';
 import '../models/lesson.dart';
+import 'package:get/get.dart';
 
 final String courseElement = 'coursesElement';
 final String tablesections = 'sections';
@@ -119,8 +125,7 @@ CREATE TABLE $lesson_contnent_table (
     return courseElem.copy(course_id: id);
   }
 
-  Future<LessonElement> createLessons(
-      LessonElement lessonElement, int courseId) async {
+  Future<LessonElement> createLessons(LessonElement lessonElement) async {
     final db = await instance.database;
     final json = lessonElement.toJson();
     await db.insert(lessontable, lessonElement.toJson());
@@ -158,22 +163,60 @@ CREATE TABLE $lesson_contnent_table (
     }
   }
 
-  Future<List<LessonElement>> readLesson(String courseSlug) async {
+  Future<List<LessonElement>> readLesson(
+      String courseSlug) async {
     final db = await instance.database;
-    final result = await db.query(
-      lessontable,
-      columns: LessonsElementFields.values,
-      where: '${LessonsElementFields.courseSlug} = ?',
-      whereArgs: [courseSlug],
-    );
-    if (result.isNotEmpty) {
+    try {
+      final result = await db.query(
+        lessontable,
+        columns: LessonsElementFields.values,
+        where: '${LessonsElementFields.courseSlug} = ?',
+        whereArgs: [courseSlug],
+      );
+      // if (result.isNotEmpty) {
       return result.map((json) => LessonElement.fromJson(json)).toList();
-    }
-    if (result.isEmpty) {
+      // }
+    } on DatabaseException catch (error) {
+      Get.snackbar("", "",
+          borderWidth: 2,
+          borderColor: maincolor,
+          dismissDirection: DismissDirection.horizontal,
+          duration: Duration(seconds: 4),
+          backgroundColor: Color.fromRGBO(255, 255, 255, 0.885),
+          titleText: Text(
+            'Error',
+            style: TextStyle(
+                color: Colors.black, fontSize: 18, fontWeight: FontWeight.bold),
+          ),
+          messageText: Text(
+            'Unable to read data from database',
+            style: TextStyle(
+                color: Colors.black, fontSize: 18, fontWeight: FontWeight.w400),
+          ),
+          margin: EdgeInsets.only(top: 12));
       return [];
-    } else {
+    } catch (e) {
+      Get.snackbar("", "",
+          borderWidth: 2,
+          borderColor: maincolor,
+          dismissDirection: DismissDirection.horizontal,
+          duration: Duration(seconds: 4),
+          backgroundColor: Color.fromRGBO(255, 255, 255, 0.885),
+          titleText: Text(
+            'Error',
+            style: TextStyle(
+                color: Colors.black, fontSize: 18, fontWeight: FontWeight.bold),
+          ),
+          messageText: Text(
+            '${e}',
+            style: TextStyle(
+                color: Colors.black, fontSize: 18, fontWeight: FontWeight.w400),
+          ),
+          margin: EdgeInsets.only(top: 12));
       return [];
     }
+
+    // return [];
   }
 
   Future<List<CourseElement>> readAllCourse() async {
@@ -188,13 +231,15 @@ CREATE TABLE $lesson_contnent_table (
 //     return result.map((json) => Section.fromJson(json)).toList();
 //   }
 
-  Future<List<LessonElement>> readAllLesson() async {
-    final db = await instance.database;
+  // Future<List<LessonElement>> readAllLesson() async {
+  //   final db = await instance.database;
 
-    final result = await db.query(lessontable);
-
-    return result.map((json) => LessonElement.fromJson(json)).toList();
-  }
+  //   final result = await db.query(lessontable);
+  //   if (result.isNotEmpty) {
+  //     return result.map((json) => LessonElement.fromJson(json)).toList();
+  //   } else
+  //     return [];
+  // }
 
   Future<List<LessonContent>> readLessonContets(int lessonId) async {
     final db = await instance.database;

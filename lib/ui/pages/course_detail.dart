@@ -25,10 +25,9 @@ class CourseDetailPage extends StatefulWidget {
 }
 
 class _CoursePagePageState extends State<CourseDetailPage> {
-   late List<LessonElement> lessonData = [];
+  late List<LessonElement> lessonData = [];
   late List<LessonContent> lessoncontent = [];
   bool isLoading = false;
-
 
   late YoutubePlayerController _controller;
   late PlayerState _playerState;
@@ -59,6 +58,7 @@ class _CoursePagePageState extends State<CourseDetailPage> {
     print("....lesson length ...." + lessonData.length.toString());
     setState(() => isLoading = false);
   }
+
   void listener() {
     if (_isPlayerReady && mounted && !_controller.value.isFullScreen) {
       setState(() {
@@ -275,8 +275,8 @@ class _CoursePagePageState extends State<CourseDetailPage> {
                                   fontWeight: FontWeight.w500,
                                 ),
                               ),
-                              onTap: () async{
-                                  List lessonIds =
+                              onTap: () async {
+                                List lessonIds =
                                     lessonListId(lessonData, section);
 
                                 lessoncontent = await CourseDatabase.instance
@@ -318,7 +318,7 @@ class _CoursePagePageState extends State<CourseDetailPage> {
       ),
     );
   }
-  
+
   Widget buildLessonCard() {
     List sections = sectionList(lessonData);
 
@@ -455,7 +455,7 @@ class _CoursePagePageState extends State<CourseDetailPage> {
                             ],
                           ),
                         ),
-                         lessonData.isEmpty
+                        lessonData.isEmpty
                             ? FutureBuilder<Lesson>(
                                 future: ApiProvider()
                                     .retrieveLessons(widget.courseData.slug),
@@ -494,9 +494,8 @@ class _CoursePagePageState extends State<CourseDetailPage> {
                                         i++) {
                                       final lessonData =
                                           snapshot.data!.lessons[i];
-                                      CourseDatabase.instance.createLessons(
-                                          lessonData!,
-                                          widget.courseData.course_id!);
+                                      CourseDatabase.instance
+                                          .createLessons(lessonData!);
                                     }
 
                                     WidgetsBinding.instance
@@ -582,5 +581,4 @@ class _CoursePagePageState extends State<CourseDetailPage> {
       ),
     );
   }
-
 }
