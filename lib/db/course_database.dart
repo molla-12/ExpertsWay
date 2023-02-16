@@ -83,11 +83,11 @@ CREATE TABLE $courseElement (
     await db.execute('''
 CREATE TABLE $lessontable (
       ${LessonsElementFields.lesson_id} $intType,
-      ${LessonsElementFields.slug} $textTypeNull,
-      ${LessonsElementFields.title} $textTypeNull,
-      ${LessonsElementFields.section} $textTypeNull,
-      ${LessonsElementFields.courseSlug} $textTypeNull,
-      ${LessonsElementFields.publishedDate} $textTypeNull,
+      ${LessonsElementFields.slug} $textType,
+      ${LessonsElementFields.title} $textType,
+      ${LessonsElementFields.section} $textType,
+      ${LessonsElementFields.courseSlug} $textType,
+      ${LessonsElementFields.publishedDate} $textType,
       $fk_course
     )
     ''');
@@ -125,25 +125,73 @@ CREATE TABLE $lesson_contnent_table (
     return courseElem.copy(course_id: id);
   }
 
-  Future<LessonElement> createLessons(LessonElement lessonElement) async {
+  Future<void> createLessons(LessonElement lessonElement) async {
     final db = await instance.database;
-    final json = lessonElement.toJson();
-    await db.insert(lessontable, lessonElement.toJson());
-    for (var i = 0; i < lessonElement.content.length; i++) {
-      await CourseDatabase.instance.createLessonsContent(
-          lessonElement.content[i],
-          json[LessonsElementFields.lesson_id].toString());
+    try {
+      final json = lessonElement.toJson();
+      final columns =
+          '${LessonsElementFields.lesson_id},${LessonsElementFields.slug},${LessonsElementFields.title},${LessonsElementFields.section},${LessonsElementFields.courseSlug},${LessonsElementFields.publishedDate}';
+    
+      await db.rawInsert(
+        'INSERT INTO $lessontable ($columns) VALUES (?,?,?,?,?,?)',
+        [
+          json[LessonsElementFields.lesson_id].toString(),
+          json[LessonsElementFields.slug],
+          json[LessonsElementFields.title],
+          json[LessonsElementFields.section],
+          json[LessonsElementFields.courseSlug],
+          json[LessonsElementFields.publishedDate],
+        ],
+      );
+
+      for (var i = 0; i < lessonElement.content.length; i++) {
+        CourseDatabase.instance.createLessonsContent(lessonElement.content[i],
+            json[LessonsElementFields.lesson_id].toString());
+      }
+    } on DatabaseException catch (error) {
+      Get.snackbar("", "",
+          borderWidth: 2,
+          borderColor: maincolor,
+          dismissDirection: DismissDirection.horizontal,
+          duration: Duration(seconds: 4),
+          backgroundColor: Color.fromRGBO(255, 255, 255, 0.885),
+          titleText: Text(
+            'Error',
+            style: TextStyle(
+                color: Colors.black, fontSize: 18, fontWeight: FontWeight.bold),
+          ),
+          messageText: Text(
+            '$error',
+            style: TextStyle(
+                color: Colors.black, fontSize: 18, fontWeight: FontWeight.w400),
+          ),
+          margin: EdgeInsets.only(top: 12));
+    } catch (e) {
+      Get.snackbar("", "",
+          borderWidth: 2,
+          borderColor: maincolor,
+          dismissDirection: DismissDirection.horizontal,
+          duration: Duration(seconds: 4),
+          backgroundColor: Color.fromRGBO(255, 255, 255, 0.885),
+          titleText: Text(
+            'Error',
+            style: TextStyle(
+                color: Colors.black, fontSize: 18, fontWeight: FontWeight.bold),
+          ),
+          messageText: Text(
+            '${e}',
+            style: TextStyle(
+                color: Colors.black, fontSize: 18, fontWeight: FontWeight.w400),
+          ),
+          margin: EdgeInsets.only(top: 12));
     }
-    return lessonElement;
   }
 
-  Future<LessonContent> createLessonsContent(
-      String content, String lessonid) async {
+  Future<void> createLessonsContent(String content, String lessonid) async {
     final db = await instance.database;
     LessonContent lescon = LessonContent(lessonId: lessonid, content: content);
     final id = await db.insert(lesson_contnent_table, lescon.toJson());
-
-    return lescon.copy(id: id);
+    lescon.copy(id: id);
   }
 
 // READ SINGLE COURSE DATA'
@@ -163,8 +211,7 @@ CREATE TABLE $lesson_contnent_table (
     }
   }
 
-  Future<List<LessonElement>> readLesson(
-      String courseSlug) async {
+  Future<List<LessonElement>> readLesson(String courseSlug) async {
     final db = await instance.database;
     try {
       final result = await db.query(
@@ -173,9 +220,7 @@ CREATE TABLE $lesson_contnent_table (
         where: '${LessonsElementFields.courseSlug} = ?',
         whereArgs: [courseSlug],
       );
-      // if (result.isNotEmpty) {
-      return result.map((json) => LessonElement.fromJson(json)).toList();
-      // }
+        return result.map((json) => LessonElement.fromJson(json)).toList();
     } on DatabaseException catch (error) {
       Get.snackbar("", "",
           borderWidth: 2,

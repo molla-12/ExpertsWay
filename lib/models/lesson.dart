@@ -56,14 +56,14 @@ class LessonElement {
   String? commentCount;
   DateTime? postModified;
   DateTime? publishedDate;
- 
+
   LessonElement({
-   required this.lessonId,
-   required this.slug,
-   required this.title,
-   required this.section,
-   required this.courseSlug,
-   required this.content,
+    required this.lessonId,
+    required this.slug,
+    required this.title,
+    required this.section,
+    required this.courseSlug,
+    required this.content,
     this.commentStatus,
     this.commentCount,
     this.postModified,
@@ -89,22 +89,21 @@ class LessonElement {
         publishedDate: publishedDate ?? publishedDate,
       );
 
+  
   factory LessonElement.fromJson(Map<String, dynamic> json) => LessonElement(
         lessonId: json[LessonsElementFields.lesson_id] as int,
-        slug: json[LessonsElementFields.slug] as String,
-        title: json[LessonsElementFields.title] as String,
-        section: json[LessonsElementFields.section] as String,
-        courseSlug: json[LessonsElementFields.courseSlug] as String,
+        slug: json[LessonsElementFields.slug] as String? ?? '',
+        title: json[LessonsElementFields.title] as String? ?? '',
+        section: json[LessonsElementFields.section] as String? ?? '',
+        courseSlug: json[LessonsElementFields.courseSlug] as String? ?? '',
         content: json["content"] == null
             ? []
             : List<String>.from(json["content"].map((x) => x)),
-        commentStatus: json['comment_status'] as String,
-        commentCount: json['comment_count'] as String,
+        commentStatus: json['comment_status'] as String? ?? '',
+        commentCount: json['comment_count'] as String? ?? '',
         postModified: json['post_modified'] == null
             ? null
-            : DateTime.parse(
-                json['post_modified'] as String),
-       
+            : DateTime.parse(json['post_modified'] as String),
         publishedDate: json[LessonsElementFields.publishedDate] == null
             ? null
             : DateTime.parse(
@@ -116,7 +115,7 @@ class LessonElement {
         LessonsElementFields.slug: slug,
         LessonsElementFields.title: title,
         LessonsElementFields.section: section,
-        LessonsElementFields.courseSlug:courseSlug,
+        LessonsElementFields.courseSlug: courseSlug,
         LessonsElementFields.publishedDate: publishedDate!.toIso8601String(),
       };
 }
